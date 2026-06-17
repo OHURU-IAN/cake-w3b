@@ -89,7 +89,8 @@ function svg(s: Sample): string {
 }
 
 async function main() {
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
+  const uploadDir =
+    process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
   await fs.mkdir(uploadDir, { recursive: true });
 
   console.log("Clearing existing cakes…");
@@ -108,7 +109,7 @@ async function main() {
         featured: s.featured ?? false,
         available: true,
         sortOrder: order,
-        imageUrl: `/uploads/${filename}`,
+        imageUrl: `/media/${filename}`,
       },
     });
     order++;

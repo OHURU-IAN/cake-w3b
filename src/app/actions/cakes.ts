@@ -7,8 +7,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { isLoggedIn } from "@/lib/session";
+import { getUploadDir, mediaUrl } from "@/lib/uploads";
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 const ALLOWED_TYPES = new Set([
   "image/jpeg",
   "image/png",
@@ -32,12 +32,13 @@ async function saveImage(file: File): Promise<string> {
     throw new Error("Image is too large (max 8 MB).");
   }
 
-  await fs.mkdir(UPLOAD_DIR, { recursive: true });
+  const dir = getUploadDir();
+  await fs.mkdir(dir, { recursive: true });
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase().slice(0, 5);
   const filename = `${crypto.randomUUID()}.${ext}`;
   const buffer = Buffer.from(await file.arrayBuffer());
-  await fs.writeFile(path.join(UPLOAD_DIR, filename), buffer);
-  return `/uploads/${filename}`;
+  await fs.writeFile(path.join(dir, filename), buffer);
+  return mediaUrl(filename);
 }
 
 function readFields(formData: FormData) {

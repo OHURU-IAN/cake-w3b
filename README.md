@@ -53,18 +53,32 @@ long random text (this keeps logins secure). Restart the site after editing.
 ## Where things are saved
 
 - **Cakes** → `prisma/dev.db` (the SQLite database file)
-- **Photos** → `public/uploads/`
+- **Photos** → `uploads/` (served via the `/media/...` route)
 
 Keep these two if you ever move the site to a new computer.
 
 ---
 
-## Putting it online (when you're ready)
+## Putting it online with Railway
 
-Because the admin saves photos and data to disk, host it somewhere with persistent
-storage — e.g. **Railway** or **Render** (both have free/cheap tiers). Avoid plain
-Vercel for now, as it would need extra add-ons for the database and photo storage.
-Happy to set this up with you when you reach that stage.
+The app stores its database and photos on disk, so it needs a host with a
+**persistent volume**. [Railway](https://railway.app) handles this well.
+
+1. **Sign up** at railway.app (you can log in with GitHub).
+2. **New Project → Deploy from GitHub repo** and pick `OHURU-IAN/cake-w3b`.
+   Railway reads `railway.json` and builds automatically.
+3. **Add a Volume** to the service and set its **mount path** to `/data`.
+   This is where cakes and photos live so they survive restarts.
+4. **Add Variables** (service → Variables):
+   - `DATABASE_URL` = `file:/data/app.db`
+   - `UPLOAD_DIR` = `/data/uploads`
+   - `ADMIN_PASSWORD` = a strong password only you know
+   - `SESSION_SECRET` = a long random string
+5. **Generate a domain** (service → Settings → Networking → Generate Domain).
+   That URL is your live website.
+
+On startup the app creates the database automatically. Then visit
+`your-domain/admin` to log in and add your real cakes.
 
 ---
 

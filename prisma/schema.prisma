@@ -7,7 +7,9 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  // Local: file:./dev.db (set in .env). Production (Railway): point this at
+  // the persistent volume, e.g. file:/data/app.db
+  url      = env("DATABASE_URL")
 }
 
 model Cake {
