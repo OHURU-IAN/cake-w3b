@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍰 Sweet Layers — cake catalogue website
 
-## Getting Started
+A simple, good-looking website to show off your cakes, with a private admin area
+where **you** add, edit and delete cakes (and upload photos) — no coding needed.
 
-First, run the development server:
+- **Public site** (`/`) — your cake menu, category filters, a page per cake, and
+  a "How to order" section with your contact details.
+- **Owner admin** (`/admin`) — password-protected. Manage your cakes here.
+
+Built with Next.js, Tailwind CSS and a SQLite database (a single file — no setup).
+
+---
+
+## Running it on your computer
+
+You'll need [Node.js](https://nodejs.org) installed (version 20 or newer).
+
+Open a terminal in this folder and run:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install        # first time only — installs everything
+npm run dev        # starts the site
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open **http://localhost:3000** in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Your public site: http://localhost:3000
+- The admin area: http://localhost:3000/admin
+  (or click **"Owner login"** at the bottom of any page)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The default admin password is set in the `.env` file. **Change it!** (see below).
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Everyday tasks
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Add / edit / delete cakes
+Log in at `/admin`, then use **Add a cake**, **Edit** or **Delete**. Each cake has:
+a name, description, price (free text like `from £25`), category, a photo, and two
+toggles — *Show on the website* and *Mark as a favourite ⭐*.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Change your business name, contact details and categories
+Edit **`src/lib/site-config.ts`**. Everything there (shop name, phone, email,
+Instagram, WhatsApp, location, and the list of categories) is in plain text with
+comments explaining each field.
 
-## Deploy on Vercel
+### Change the admin password
+Open **`.env`** and change `ADMIN_PASSWORD`. Also change `SESSION_SECRET` to any
+long random text (this keeps logins secure). Restart the site after editing.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Where things are saved
+
+- **Cakes** → `prisma/dev.db` (the SQLite database file)
+- **Photos** → `public/uploads/`
+
+Keep these two if you ever move the site to a new computer.
+
+---
+
+## Putting it online (when you're ready)
+
+Because the admin saves photos and data to disk, host it somewhere with persistent
+storage — e.g. **Railway** or **Render** (both have free/cheap tiers). Avoid plain
+Vercel for now, as it would need extra add-ons for the database and photo storage.
+Happy to set this up with you when you reach that stage.
+
+---
+
+## Handy commands
+
+| Command            | What it does                                    |
+| ------------------ | ----------------------------------------------- |
+| `npm run dev`      | Run the site locally for development            |
+| `npm run build`    | Build the production version                    |
+| `npm start`        | Run the built production version                |
+| `npm run db:seed`  | Reset the menu to the sample cakes              |
+| `npm run db:push`  | Apply database changes after editing the schema |

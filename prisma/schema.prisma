@@ -1,0 +1,26 @@
+// Prisma schema — defines the shape of your data.
+// After changing this file, run: npm run db:push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Cake {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  // Price stored as a plain string so you can write "£25" or "from £30" etc.
+  price       String   @default("")
+  category    String   @default("Other")
+  imageUrl    String   @default("")
+  available   Boolean  @default(true)
+  featured    Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
