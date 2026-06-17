@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllCakes } from "@/lib/cakes";
-import { CakeImage } from "@/components/CakeCard";
+import { CakeImage } from "@/components/CakeImage";
 import { DeleteCakeButton } from "./DeleteCakeButton";
 
 export const metadata: Metadata = { title: "Dashboard" };

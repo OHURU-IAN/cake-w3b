@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getPublicCakes } from "@/lib/cakes";
 import { siteConfig } from "@/lib/site-config";
 import { CakeCard } from "@/components/CakeCard";
+import { Reveal } from "@/components/Reveal";
+import { Hero3D } from "@/components/three/Hero3D";
 
 export default async function HomePage({
   searchParams,
@@ -16,7 +18,6 @@ export default async function HomePage({
     ? cakes.filter((c) => c.category === activeCategory)
     : cakes;
 
-  // Only show category chips that actually have cakes.
   const usedCategories = siteConfig.categories.filter((cat) =>
     cakes.some((c) => c.category === cat),
   );
@@ -25,54 +26,73 @@ export default async function HomePage({
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-gradient-to-b from-blush to-cream">
-        <div className="mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
-          <h1 className="text-4xl font-bold text-berry sm:text-5xl">
-            {siteConfig.tagline}
+      {/* ---------- Hero ---------- */}
+      <section className="mx-auto grid max-w-6xl items-center gap-6 px-4 pb-8 pt-10 lg:grid-cols-2 lg:gap-4 lg:pt-16">
+        <div className="order-2 text-center lg:order-1 lg:text-left">
+          <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium text-berry shadow-sm">
+            <span className="bob inline-block">🧁</span> Freshly baked, made to
+            order
+          </span>
+          <h1 className="mt-5 text-5xl font-bold leading-[1.05] tracking-tight text-cocoa sm:text-6xl">
+            <span className="bg-gradient-to-br from-berry via-rose to-gold bg-clip-text text-transparent">
+              {siteConfig.tagline}
+            </span>
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-cocoa/80">
+          <p className="mx-auto mt-5 max-w-xl text-lg text-cocoa/80 lg:mx-0">
             {siteConfig.intro}
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
             <a
               href="#menu"
-              className="rounded-full bg-berry px-6 py-3 font-semibold text-cream hover:bg-berry-dark"
+              className="shine rounded-full bg-gradient-to-r from-berry to-berry-dark px-7 py-3.5 font-semibold text-cream shadow-xl shadow-berry/30 transition hover:-translate-y-0.5 hover:shadow-berry/50"
             >
               Browse the menu
             </a>
             <a
               href="#order"
-              className="rounded-full border border-berry px-6 py-3 font-semibold text-berry hover:bg-blush"
+              className="glass rounded-full px-7 py-3.5 font-semibold text-berry transition hover:-translate-y-0.5"
             >
               How to order
             </a>
           </div>
         </div>
+
+        {/* Interactive 3D cake */}
+        <div className="order-1 lg:order-2">
+          <Hero3D />
+        </div>
       </section>
 
-      {/* Menu */}
-      <section id="menu" className="mx-auto max-w-5xl px-4 py-12">
-        <h2 className="text-3xl font-bold text-cocoa">Our cakes</h2>
-
-        {/* Category filter */}
-        {usedCategories.length > 0 && (
-          <div className="mt-6 flex flex-wrap gap-2">
-            <CategoryChip label="All" href="/#menu" active={!activeCategory} />
-            {usedCategories.map((cat) => (
-              <CategoryChip
-                key={cat}
-                label={cat}
-                href={`/?category=${encodeURIComponent(cat)}#menu`}
-                active={activeCategory === cat}
-              />
-            ))}
+      {/* ---------- Menu ---------- */}
+      <section id="menu" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-12">
+        <Reveal>
+          <div className="flex flex-col items-center text-center">
+            <span className="text-sm font-semibold uppercase tracking-[0.25em] text-rose">
+              The menu
+            </span>
+            <h2 className="mt-2 text-4xl font-bold text-cocoa">Our cakes</h2>
+            <div className="mt-3 h-1 w-20 rounded-full bg-gradient-to-r from-berry to-gold" />
           </div>
+        </Reveal>
+
+        {usedCategories.length > 0 && (
+          <Reveal delay={80}>
+            <div className="mt-8 flex flex-wrap justify-center gap-2">
+              <CategoryChip label="All" href="/#menu" active={!activeCategory} />
+              {usedCategories.map((cat) => (
+                <CategoryChip
+                  key={cat}
+                  label={cat}
+                  href={`/?category=${encodeURIComponent(cat)}#menu`}
+                  active={activeCategory === cat}
+                />
+              ))}
+            </div>
+          </Reveal>
         )}
 
-        {/* Grid */}
         {visibleCakes.length === 0 ? (
-          <div className="mt-10 rounded-2xl border border-dashed border-rose/50 bg-white/60 p-10 text-center text-cocoa/70">
+          <div className="glass mx-auto mt-10 max-w-lg rounded-3xl p-10 text-center text-cocoa/70">
             <p className="text-lg">No cakes to show yet.</p>
             <p className="mt-1 text-sm">
               Add your first cake from the{" "}
@@ -83,42 +103,58 @@ export default async function HomePage({
             </p>
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {visibleCakes.map((cake) => (
-              <CakeCard key={cake.id} cake={cake} />
+          <div className="mt-10 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+            {visibleCakes.map((cake, i) => (
+              <Reveal key={cake.id} delay={(i % 3) * 90}>
+                <CakeCard cake={cake} />
+              </Reveal>
             ))}
           </div>
         )}
       </section>
 
-      {/* How to order */}
-      <section id="order" className="bg-blush/40">
-        <div className="mx-auto max-w-5xl px-4 py-14">
-          <h2 className="text-3xl font-bold text-cocoa">How to order</h2>
-          <p className="mt-3 max-w-2xl text-cocoa/80">
-            Found something you love? Get in touch and let&apos;s talk flavours,
-            sizes and dates. Orders are made fresh, so please give as much notice
-            as you can.
-          </p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <ContactCard
-              label="Call or text"
-              value={siteConfig.phone}
-              href={`tel:${phoneDigits}`}
-            />
-            <ContactCard
-              label="Email"
-              value={siteConfig.email}
-              href={`mailto:${siteConfig.email}`}
-            />
-            {siteConfig.whatsapp && (
-              <ContactCard
-                label="WhatsApp"
-                value="Message us"
-                href={`https://wa.me/${siteConfig.whatsapp}`}
-              />
-            )}
-          </div>
+      {/* ---------- How to order ---------- */}
+      <section id="order" className="scroll-mt-24 py-16">
+        <div className="mx-auto max-w-6xl px-4">
+          <Reveal>
+            <div className="glass overflow-hidden rounded-[2rem] p-8 sm:p-12">
+              <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+                <div>
+                  <h2 className="text-4xl font-bold text-cocoa">How to order</h2>
+                  <p className="mt-4 text-cocoa/80">
+                    Found something you love? Get in touch and let&apos;s talk
+                    flavours, sizes and dates. Everything is made fresh, so
+                    please give as much notice as you can.
+                  </p>
+                  <p className="mt-3 text-sm text-cocoa/60">
+                    📍 {siteConfig.location}
+                  </p>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <ContactCard
+                    icon="📞"
+                    label="Call or text"
+                    value={siteConfig.phone}
+                    href={`tel:${phoneDigits}`}
+                  />
+                  <ContactCard
+                    icon="✉️"
+                    label="Email"
+                    value={siteConfig.email}
+                    href={`mailto:${siteConfig.email}`}
+                  />
+                  {siteConfig.whatsapp && (
+                    <ContactCard
+                      icon="💬"
+                      label="WhatsApp"
+                      value="Message us"
+                      href={`https://wa.me/${siteConfig.whatsapp}`}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
     </>
@@ -139,8 +175,8 @@ function CategoryChip({
       href={href}
       className={
         active
-          ? "rounded-full bg-berry px-4 py-2 text-sm font-medium text-cream"
-          : "rounded-full border border-rose/40 bg-white px-4 py-2 text-sm font-medium text-cocoa hover:border-berry hover:text-berry"
+          ? "rounded-full bg-gradient-to-r from-berry to-berry-dark px-5 py-2 text-sm font-semibold text-cream shadow-lg shadow-berry/30"
+          : "glass rounded-full px-5 py-2 text-sm font-medium text-cocoa transition hover:-translate-y-0.5 hover:text-berry"
       }
     >
       {label}
@@ -149,10 +185,12 @@ function CategoryChip({
 }
 
 function ContactCard({
+  icon,
   label,
   value,
   href,
 }: {
+  icon: string;
   label: string;
   value: string;
   href: string;
@@ -162,9 +200,10 @@ function ContactCard({
       href={href}
       target={href.startsWith("http") ? "_blank" : undefined}
       rel="noopener noreferrer"
-      className="rounded-2xl border border-blush bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+      className="rounded-2xl border border-white/60 bg-white/70 p-5 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-berry/20"
     >
-      <p className="text-xs font-medium uppercase tracking-wide text-rose">
+      <p className="text-2xl">{icon}</p>
+      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-rose">
         {label}
       </p>
       <p className="mt-1 font-semibold text-cocoa">{value}</p>

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCake } from "@/lib/cakes";
 import { siteConfig } from "@/lib/site-config";
-import { CakeImage } from "@/components/CakeCard";
+import { CakeImage } from "@/components/CakeImage";
 
 export async function generateMetadata({
   params,
@@ -43,7 +43,7 @@ export default async function CakeDetailPage({
       </Link>
 
       <div className="mt-6 grid gap-8 md:grid-cols-2">
-        <div className="overflow-hidden rounded-3xl border border-blush bg-white">
+        <div className="overflow-hidden rounded-[2rem] border border-white/60 bg-white/70 shadow-[0_20px_60px_-20px_rgba(140,55,74,0.5)]">
           <CakeImage
             src={cake.imageUrl}
             alt={cake.name}

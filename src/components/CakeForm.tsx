@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Cake } from "@prisma/client";
 import { siteConfig } from "@/lib/site-config";
-import { CakeImage } from "@/components/CakeCard";
+import { CakeImage } from "@/components/CakeImage";
 
 export function CakeForm({
   action,
