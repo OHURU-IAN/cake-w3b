@@ -133,7 +133,7 @@ The app stores its database and photos on disk, so it needs a host with a
 **persistent volume**. [Railway](https://railway.app) handles this well.
 
 1. **Sign up** at railway.app (you can log in with GitHub).
-2. **New Project → Deploy from GitHub repo** and pick `OHURU-IAN/cake-w3b`.
+2. **New Project → Deploy from GitHub repo** and pick `OHURU-IAN/sweet-layers`.
    Railway reads `railway.json` and builds automatically.
 3. **Add a Volume** to the service and set its **mount path** to `/data`.
    This is where cakes and photos live so they survive restarts.
